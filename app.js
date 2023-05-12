@@ -4,7 +4,7 @@ const cors = require('cors')
 require('dotenv').config()
 
 const app = express()
-mongoose.connect(process.env.DB_global_link)
+mongoose.connect(process.env.DB_local_link)
     .then(data => {
         if (data) {
             console.log("DB connected...");
@@ -19,6 +19,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/', require('./routes/index'))
+app.use('/groups', require('./routes/groups'))
 app.use('/teachers', require('./routes/teachers'))
 app.use('/students', require('./routes/students'))
 

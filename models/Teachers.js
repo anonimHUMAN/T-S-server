@@ -13,8 +13,18 @@ module.exports = model("teacher", new Schema({
     group: [
         {
             title: String,
-            time: Date,
-            students: [Number]
+            day: {
+                type: String,
+                enum: ["toq", "juft"],
+                default: "toq"
+            },
+            time: {
+                type: String,
+                require: true
+            },
+            students: [{
+                id: String
+            }]
         }
     ]
-}, { timestamps: true })) 
+}, { timestamps: true }))
