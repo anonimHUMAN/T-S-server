@@ -4,10 +4,17 @@ const {
     show,
     create,
     edit,
-    remove
+    remove,
+    addStudentToGroup,
+    removeStudentFromGroup
 } = require('../controllers/students')
 
 const router = Router()
+
+router.post('/manage', addStudentToGroup)
+// http://localhost:3000/students/manage
+router.delete('/manage', removeStudentFromGroup)
+// http://localhost:3000/students/manage
 
 router.get('/', index)
 router.get('/:id', show)

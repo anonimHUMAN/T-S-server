@@ -1,5 +1,6 @@
 const { title } = require("process")
 const Students = require('../models/Students')
+const Teacher = require('../models/Teachers')
 
 exports.index = async (req, res) => {
     let data = await Students.find({})
@@ -67,5 +68,52 @@ exports.remove = async (req, res) => {
         res.json({ title: "Student deleted" })
     } else {
         res.json({ title: `${req.params.id} not found` });
+    }
+}
+exports.addStudentToGroup = async (req, res) => {
+    let { idTeacher, idGroup, idStudent } = req.body
+    if (idTeacher && idGroup && idStudent) {
+        let teacher = await Teacher.findById(idTeacher)
+        if (!teacher) {
+            res.json({ title: "Teacher not found..." })
+        } else {
+            let group = await Teacher.findOneAndUpdate(
+                {
+                    _id: idTeacher,
+                    "group._id": idGroup
+                },
+                {
+                    $set: {
+                        "group.$.students": idStudent
+                    }
+                })
+            res.json({ title: "Success", group })
+        }
+    } else {
+        res.json({ title: "Data is not defined..." })
+    }
+}
+exports.removeStudentFromGroup = async (req, res) => {
+    let { idTeacher, idGroup, idStudent } = req.body
+    // console.log(idTeacher, idGroup, idStudent);
+    if (idTeacher && idGroup && idStudent) {
+        let teacher = await Teacher.findById(idTeacher)
+        if (!teacher) {
+            res.json({ title: "Teacher not found..." })
+        } else {
+            let group = await Teacher.findOneAndUpdate(
+                {
+                    _id: idTeacher,
+                    "group._id": idGroup
+                },
+                {
+                    $pull: {
+                        "group.$.students": idStudent
+                    }
+                })
+            res.json({ title: "Deleted", group })
+        }
+    } else {
+        res.json({ title: "Data is not defined..." })
     }
 }

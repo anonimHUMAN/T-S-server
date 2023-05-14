@@ -1,24 +1,6 @@
 const { title } = require("process")
 const Teacher = require('../models/Teachers')
 
-// exports.test = async (req, res) => {
-//     let { idGroup } = req.query
-//     // try {
-//     let data = await Teacher.findById(req.params.id)
-//     console.log(data);
-//     // let t = await data.some(idGroup)
-//     // console.log(t);
-//     // .select({ group: { $elemMath: { _id: idGroup } } })
-//     // } catch (e) {
-//     //     res.json({ title: "ERROR: ", e })
-//     // }
-//     // if (data) {
-//     //     res.json({ title: "Special data", data })
-//     // } else {
-//     //     res.json({ title: "ERROR: " })
-//     // }
-// }
-
 exports.index = async (req, res) => {
     let { idTeacher } = req.query
     const data = await Teacher.findById(idTeacher, ["group"])
@@ -56,26 +38,29 @@ exports.create = async (req, res) => {
         res.json({ title: 'ERROR: ', e })
     }
 }
+// http://localhost:3000/groups/645d042cf5f09148a52261b8?idTeacher=6454bca9541ea2c365e58dbb
 exports.edit = async (req, res) => {
-    try {
-        let { title, day, time } = req.body
-        const data = await Teacher.findById(req.query.idTeacher).select({ group: { $elemMatch: { _id: req.params.id } } })
-        if (data) {
-            let DATA = {
-                title: title ? title : data.group[0].title,
-                day: day ? day : data.group[0].day,
-                time: time ? time : data.group[0].time,
-                students: data.group[0].students,
-                id: data.group[0].id
+    const { title, day, time } = req.body
+    const { idTeacher } = req.query
+    const idGroup = req.params.id
+
+    if (!idTeacher && !idGroup) res.json({ title: "Err id is not defined" })
+    if (title || day || time) {
+        let data = await Teacher.findOneAndUpdate(
+            {
+                _id: idTeacher,
+                "group._id": idGroup
+            },
+            {
+                $set: {
+                    "group.$": { ...req.body, _id: idGroup }
+                }
             }
-            if (DATA) {
-                res.json({ title: "Teacher updated", DATA })
-            }
-        } else {
-            res.json({ title: "Data not found" })
-        }
-    } catch (e) {
-        res.json({ title: "ERROR: ", e })
+        )
+        // console.log(data);
+        res.json({ title: "Group updated", data })
+    } else {
+        res.json({ title: "Error: Body is not defined" })
     }
 }
 exports.remove = async (req, res) => {

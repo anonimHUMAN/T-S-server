@@ -7,10 +7,10 @@ module.exports = model("student", new Schema({
     firstName: String,
     lastName: String,
     email: String,
-    phone: Number,
+    phone: String,
     ParentsPhoneNumber: {
-        mother: Number,
-        father: Number
+        mother: String,
+        father: String
     },
     password: String,
     totalScore: Number,

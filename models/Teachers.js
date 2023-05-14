@@ -23,7 +23,9 @@ module.exports = model("teacher", new Schema({
                 require: true
             },
             students: [{
-                id: String
+                type: Schema.Types.ObjectId,
+                ref: "student",
+                // unique: true
             }]
         }
     ]
