@@ -25,7 +25,7 @@ module.exports = model("teacher", new Schema({
             students: [{
                 type: Schema.Types.ObjectId,
                 ref: "student",
-                // unique: true
+                unique: true
             }]
         }
     ]

@@ -6,7 +6,7 @@ const {
     edit,
     remove,
     test
-} = require('../controllers/groups')
+} = require('../../controllers/path/groups')
 
 const router = Router()
 

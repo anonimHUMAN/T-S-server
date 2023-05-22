@@ -5,7 +5,7 @@ const {
     create,
     edit,
     remove
-} = require('../controllers/teachers')
+} = require('../../controllers/path/teachers')
 
 const router = Router()
 

@@ -17,7 +17,7 @@ module.exports = model("student", new Schema({
     attendance: [
         {
             status: String,
-            time: Date,
+            time: String,
             reason: String,
             score: Number
         }

@@ -7,7 +7,7 @@ const {
     remove,
     addStudentToGroup,
     removeStudentFromGroup
-} = require('../controllers/students')
+} = require('../../controllers/path/students')
 
 const router = Router()
 

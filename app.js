@@ -1,6 +1,17 @@
 const express = require('express')
 const mongoose = require('mongoose');
-const cors = require('cors')
+const cors = require('cors');
+
+const {
+    token
+} = require('./middleware/token');
+
+const {
+    checkAdmin,
+    checkTeacher,
+    checkStudent
+} = require('./middleware/checkRole');
+
 require('dotenv').config()
 
 const app = express()
@@ -19,9 +30,20 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/', require('./routes/index'))
-app.use('/groups', require('./routes/groups'))
-app.use('/teachers', require('./routes/teachers'))
-app.use('/students', require('./routes/students'))
+
+app.use('/groups', require('./routes/path/groups'))
+
+app.use('/routeTeacher', require('./routes/route/routeTeacher'))
+
+app.use('/teachers', require('./routes/path/teachers'))
+app.use('/students', require('./routes/path/students'))
+
+app.use('/auth', require('./routes/auth/auntification'))
+
+app.use('/admin', token, checkAdmin, require('./routes/identfy/admin'))
+app.use('/teacher', token, checkTeacher, require('./routes/identfy/teacher'))
+app.use('/student', token, checkStudent, require('./routes/identfy/student'))
+
 
 const PORT = process.env.PORT || 3000
 

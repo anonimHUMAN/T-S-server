@@ -1,6 +1,6 @@
 const { title } = require("process")
-const Students = require('../models/Students')
-const Teacher = require('../models/Teachers')
+const Students = require('../../model/Students')
+const Teacher = require('../../model/Teachers')
 
 exports.index = async (req, res) => {
     let data = await Students.find({})
@@ -19,32 +19,36 @@ exports.create = (req, res) => {
     let attendance = req.body.attendance
     let { firstName, lastName, email, phone, password, totalScore } = req.body
     if (firstName && lastName && email && phone && parent && attendance && password && totalScore) {
-        let student = new Students({
-            firstName,
-            lastName,
-            email,
-            phone,
-            ParentsPhoneNumber: {
-                mother: req.body.ParentsPhoneNumber.mother,
-                father: req.body.ParentsPhoneNumber.father
-            },
-            password,
-            totalScore,
-            attendance: [
-                {
-                    status: req.body.attendance[0].status,
-                    time: req.body.attendance[0].time,
-                    reason: req.body.attendance[0].reason,
-                    score: req.body.attendance[0].score
-                }
-            ]
-        })
-        student.save()
-            .then(data => {
-                if (data) {
-                    res.json({ title: "Students created", data: data })
-                }
+        try {
+            let student = new Students({
+                firstName,
+                lastName,
+                email,
+                phone,
+                ParentsPhoneNumber: {
+                    mother: req.body.ParentsPhoneNumber.mother,
+                    father: req.body.ParentsPhoneNumber.father
+                },
+                password,
+                totalScore,
+                attendance: [
+                    {
+                        status: req.body.attendance[0].status,
+                        time: req.body.attendance[0].time,
+                        reason: req.body.attendance[0].reason,
+                        score: req.body.attendance[0].score
+                    }
+                ]
             })
+            student.save()
+                .then(data => {
+                    if (data) {
+                        res.json({ title: "Students created", data: data })
+                    }
+                })
+        } catch (e) {
+            res.json({ title: "Error", e })
+        }
     }
     else {
         res.json({ title: "Enter all data for student!!!" })
@@ -95,7 +99,6 @@ exports.addStudentToGroup = async (req, res) => {
 }
 exports.removeStudentFromGroup = async (req, res) => {
     let { idTeacher, idGroup, idStudent } = req.body
-    // console.log(idTeacher, idGroup, idStudent);
     if (idTeacher && idGroup && idStudent) {
         let teacher = await Teacher.findById(idTeacher)
         if (!teacher) {

@@ -1,10 +1,11 @@
 const { Router } = require('express')
 const {
-    index,
+    index, create,
 } = require('../controllers/index')
 
 const router = Router()
 
 router.get('/', index)
+router.post('/', create)
 
 module.exports = router
