@@ -7,15 +7,21 @@ exports.index = async (req, res) => {
 
 exports.create = async (req, res) => {
     req.body.data.map(async item => {
-        let student = await Students.findByIdAndUpdate(item._id, {
-            $push: {
-                attendance: {
-                    status: item.attendance.status,
-                    time: item.attendance.time,
-                    reason: item.attendance.reason,
-                    score: item.attendance.score
-                }
+        if (item.attendance.time) {
+            try {
+                let student = await Students.findByIdAndUpdate(item._id, {
+                    $push: {
+                        attendance: {
+                            status: item.attendance.status,
+                            time: Date(item.attendance.time),
+                            reason: Boolean(item.attendance.reason),
+                            score: item.attendance.score
+                        }
+                    }
+                })
+            } catch (error) {
+                console.log(error);
             }
-        })
+        }
     })
 }

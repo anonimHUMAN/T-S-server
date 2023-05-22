@@ -18,7 +18,10 @@ module.exports = model("student", new Schema({
         {
             status: String,
             time: String,
-            reason: String,
+            reason: {
+                type: Boolean,
+                default: false
+            },
             score: Number
         }
     ]

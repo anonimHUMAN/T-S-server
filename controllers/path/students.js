@@ -34,8 +34,8 @@ exports.create = (req, res) => {
                 attendance: [
                     {
                         status: req.body.attendance[0].status,
-                        time: req.body.attendance[0].time,
-                        reason: req.body.attendance[0].reason,
+                        time: Date(req.body.attendance[0].time),
+                        reason: Boolean(req.body.attendance[0].reason),
                         score: req.body.attendance[0].score
                     }
                 ]
