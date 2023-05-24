@@ -1,16 +1,16 @@
 const { title } = require("process")
-const Teacher = require('../../model/Teachers')
+const Ucer = require('../../model/Role')
 
 exports.index = async (req, res) => {
     let { idTeacher } = req.query
-    const data = await Teacher.findById(idTeacher, ["group"])
+    const data = await Ucer.findById(idTeacher, ["group"])
     if (data) {
         res.json({ title: "All groups for teacher", data })
     }
 }
 exports.show = async (req, res) => {
     try {
-        const data = await Teacher.findById(req.query.idTeacher).select({ group: { $elemMatch: { _id: req.params.id } } })
+        const data = await Ucer.findById(req.query.idTeacher).select({ group: { $elemMatch: { _id: req.params.id } } })
         if (data) {
             res.json({ title: "Special teacher", data })
         }
@@ -22,9 +22,9 @@ exports.create = async (req, res) => {
     let { title, day, time } = req.body
     let { idTeacher } = req.query
     try {
-        let idTeacherCheck = await Teacher.findById(idTeacher)
+        let idTeacherCheck = await Ucer.findById(idTeacher)
         if (title && day && time) {
-            let data = await Teacher.findByIdAndUpdate(idTeacher, { $push: { group: req.body } })
+            let data = await Ucer.findByIdAndUpdate(idTeacher, { $push: { group: req.body } })
             if (data) {
                 res.json({ title: 'Group added to teacher', data })
             } else {
@@ -46,7 +46,7 @@ exports.edit = async (req, res) => {
 
     if (!idTeacher && !idGroup) res.json({ title: "Err id is not defined" })
     if (title || day || time) {
-        let data = await Teacher.findOneAndUpdate(
+        let data = await Ucer.findOneAndUpdate(
             {
                 _id: idTeacher,
                 "group._id": idGroup
@@ -57,7 +57,6 @@ exports.edit = async (req, res) => {
                 }
             }
         )
-        // console.log(data);
         res.json({ title: "Group updated", data })
     } else {
         res.json({ title: "Error: Body is not defined" })
@@ -65,7 +64,7 @@ exports.edit = async (req, res) => {
 }
 exports.remove = async (req, res) => {
     if (req.query.idTeacher && req.query.idGroup) {
-        const data = await Teacher.findByIdAndUpdate(req.query.idTeacher, { $pull: { group: { _id: req.query.idGroup } } })
+        const data = await Ucer.findByIdAndUpdate(req.query.idTeacher, { $pull: { group: { _id: req.query.idGroup } } })
         if (data) {
             res.json({ title: "Group deleted" })
         }

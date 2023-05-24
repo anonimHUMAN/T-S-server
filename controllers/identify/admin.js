@@ -1,9 +1,8 @@
-const Teacher = require('../../model/Teachers')
-const Students = require('../../model/Students')
+const Ucer = require('../../model/Role')
 
 exports.admin = async (req, res) => {
-    let teacher = await Teacher.find({})
-    let student = await Students.find({})
+    let teacher = await Ucer.find({})
+    let student = await Ucer.find({})
     if (teacher && student) {
         res.json({ title: "All data", teacher, student })
     }

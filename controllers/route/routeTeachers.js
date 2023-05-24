@@ -1,10 +1,10 @@
 const { title } = require("process")
-const Teacher = require('../../model/Teachers')
+const Ucer = require("../../model/Role")
 
 exports.index = async (req, res) => {
     let { idTeacher } = req.query
     try {
-        let data = await Teacher.findById(idTeacher)
+        let data = await Ucer.findById(idTeacher)
         let group = data.group
         res.json({ title: "All group", group })
     } catch (e) {
@@ -12,7 +12,7 @@ exports.index = async (req, res) => {
     }
 }
 exports.profile = async (req, res) => {
-    let data = await Teacher.findById(req.params.id)
+    let data = await Ucer.findById(req.params.id)
     if (data) {
         res.json({ title: "Your account", data })
     }
@@ -20,7 +20,7 @@ exports.profile = async (req, res) => {
 exports.profilePut = async (req, res) => {
     let { email, password } = req.body
     if (email && password) {
-        let data = await Teacher.findByIdAndUpdate(req.params.id, req.body)
+        let data = await Ucer.findByIdAndUpdate(req.params.id, req.body)
         if (data) {
             res.json({ title: "Email and password edited..." })
         }
@@ -33,7 +33,7 @@ exports.oneGr = async (req, res) => {
     let { idTeacher, idGroup } = req.query
     try {
         if (idTeacher && idGroup) {
-            const data = await Teacher.findById(idTeacher).select({ group: { $elemMatch: { _id: idGroup } } })
+            const data = await Ucer.findById(idTeacher).select({ group: { $elemMatch: { _id: idGroup } } })
             if (data) {
                 res.json({ title: "One group", data })
             }
@@ -49,8 +49,7 @@ exports.oneGrPut = async (req, res) => {
     let { idTeacher, idGroup } = req.query
     try {
         if (idTeacher && idGroup) {
-            // console.log(idTeacher, idGroup);
-            const data = await Teacher.findById(idTeacher).select({ group: { $elemMatch: { _id: idGroup } } })
+            const data = await Ucer.findById(idTeacher).select({ group: { $elemMatch: { _id: idGroup } } })
             if (data) {
                 res.json({ title: "One group", data })
             }
