@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const Ucer = require('../../model/Role')
 
 exports.index = async (req, res) => {
-    let data = await Ucer.find({})
+    let data = await Ucer.find({ status: "teacher" })
     if (data) {
         res.json({ title: "All teachers", data })
     }
@@ -27,7 +27,8 @@ exports.create = async (req, res) => {
                     email,
                     phone,
                     password: hash,
-                    subject
+                    subject,
+                    status: 'teacher'
                 })
                 teacher.save()
                     .then(data => {

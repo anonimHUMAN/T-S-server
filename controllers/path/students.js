@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const Ucer = require("../../model/Role")
 
 exports.index = async (req, res) => {
-    let data = await Ucer.find({})
+    let data = await Ucer.find({ status: 'student' })
     if (data) {
         res.json({ title: "All students", data })
     }
@@ -41,7 +41,8 @@ exports.create = async (req, res) => {
                             reason: Boolean(req.body.attendance[0].reason),
                             score: req.body.attendance[0].score
                         }
-                    ]
+                    ],
+                    status: 'student'
                 })
                 student.save()
                     .then(data => {
