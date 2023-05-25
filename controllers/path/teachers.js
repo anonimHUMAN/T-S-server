@@ -44,13 +44,14 @@ exports.create = async (req, res) => {
             res.json({ title: "Enter all data for teacher!!!" })
         }
     } else if (data) {
-        res.json({ title: "This teacher already exit" })
+        res.json({ title: "This teacher already exist" })
     }
 }
 exports.edit = async (req, res) => {
     let { firstName, lastName, email, subject, phone, password } = req.body
     if (firstName || lastName || email || subject || phone || password) {
-        let data = await Ucer.findByIdAndUpdate(req.params.id, req.body)
+        let hash = await bcrypt.hash(password, 10)
+        let data = await Ucer.findByIdAndUpdate(req.params.id, { password: hash }, req.body)
         if (data) {
             res.json({ title: "Teacher edited", data })
         }
@@ -59,6 +60,7 @@ exports.edit = async (req, res) => {
         res.json({ title: "Data is notfound for teacher!!!" })
     }
 }
+
 exports.remove = async (req, res) => {
     let data = await Ucer.findByIdAndDelete(req.params.id)
     if (data) {

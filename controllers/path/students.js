@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
     let { firstName, lastName, email, phone, password, totalScore } = req.body
     let data = await Ucer.findOne({ email })
     if (!data) {
-        if (firstName && lastName && email && phone && parent && attendance && password && totalScore) {
+        if (firstName && lastName && email && phone && parent && password && totalScore) {
             try {
                 let hash = await bcrypt.hash(password, 10)
                 let student = new Ucer({
@@ -36,10 +36,10 @@ exports.create = async (req, res) => {
                     totalScore,
                     attendance: [
                         {
-                            status: req.body.attendance[0].status,
-                            time: Date(req.body.attendance[0].time),
-                            reason: Boolean(req.body.attendance[0].reason),
-                            score: req.body.attendance[0].score
+                            status: req.body.attendance.status,
+                            time: Date(req.body.attendance.time),
+                            reason: Boolean(req.body.attendance.reason),
+                            score: req.body.attendance.score
                         }
                     ],
                     status: 'student'
@@ -64,7 +64,8 @@ exports.create = async (req, res) => {
 exports.edit = async (req, res) => {
     let { firstName, lastName, email, phone, password, totalScore } = req.body
     if (firstName || lastName || email || phone || password || totalScore) {
-        let data = await Ucer.findByIdAndUpdate(req.params.id, req.body)
+        let hash = await bcrypt.hash(password, 10)
+        let data = await Ucer.findByIdAndUpdate(req.params.id, { password: hash }, req.body)
         if (data) {
             res.json({ title: "Student edited", data })
         }
