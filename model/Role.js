@@ -26,10 +26,10 @@ module.exports = model("ucer", new Schema({
             },
             time: {
                 type: String,
-                require: true
             },
             students: [{
                 type: Schema.Types.ObjectId,
+                ref: 'ucer'
             }]
         }
     ],

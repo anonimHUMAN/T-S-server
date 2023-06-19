@@ -4,11 +4,18 @@ const {
     show,
     create,
     edit,
-    remove
+    remove,
+    getTeach,
+    showStudents
 } = require('../../controllers/path/groups')
 
 const router = Router()
 
+
+// http://localhost:3000/groups/getId
+router.get('/getId', getTeach)
+// http://localhost:3000/groups/id for the group?idTeacher=id for the teacher
+router.get('/students/:id', showStudents)
 // http://localhost:3000/groups?idTeacher=id for the teacher
 router.get('/', index)
 // http://localhost:3000/groups/id for the group?idTeacher=id for the teacher

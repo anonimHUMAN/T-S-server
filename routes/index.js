@@ -6,7 +6,5 @@ const {
 const router = Router()
 
 router.get('/', index)
-// router.get('/', index)
-// router.post('/', create)
 
 module.exports = router

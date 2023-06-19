@@ -6,7 +6,7 @@ exports.signIn = async (req, res) => {
     const { email, password } = req.body
     const user = await Ucer.findOne({ email })
     if (!user) {
-        res.json({ title: "ERROR: ", message: "This user not found" })
+        res.json({ title: "ERROR: ", message: "This email not found" })
     } else {
         let isValid = await bcrypt.compare(password, user.password)
         if (!isValid) {
@@ -16,8 +16,9 @@ exports.signIn = async (req, res) => {
                 id: user.id,
                 status: user.status
             }
+            let status = user.status
             const token = await jwt.sign(payload, "Key", { expiresIn: '1h' })
-            res.json({ title: "Success", message: "WELCOME your room", token })
+            res.status(200).json({ title: "Success", message: "WELCOME your room", token, status })
         }
     }
 }

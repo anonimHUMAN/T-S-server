@@ -1,7 +1,33 @@
 const { title } = require("process")
 const bcrypt = require('bcrypt')
 const Ucer = require("../../model/Role")
+const jwt = require('jsonwebtoken')
 
+exports.oneScore = async (req, res) => {
+    jwt.verify(req.headers.authorization, 'Key', async function (err, decoded) {
+        if (err) {
+            res.json(err)
+        } else if (decoded) {
+            let data = await Ucer.findById(decoded.id)
+            if (data) {
+                let newData = data.attendance.slice(-1).pop()
+                res.json({ title: "Your score", score: newData.score })
+            }
+        }
+    });
+}
+exports.profileSt = async (req, res) => {
+    jwt.verify(req.headers.authorization, 'Key', async function (err, decoded) {
+        if (err) {
+            res.json(err)
+        } else if (decoded) {
+            let data = await Ucer.findById(decoded.id)
+            if (data) {
+                res.json({ title: "Your profile", data })
+            }
+        }
+    });
+}
 exports.index = async (req, res) => {
     let data = await Ucer.find({ status: 'student' })
     if (data) {
@@ -17,10 +43,10 @@ exports.show = async (req, res) => {
 exports.create = async (req, res) => {
     let parent = req.body.ParentsPhoneNumber
     let attendance = req.body.attendance
-    let { firstName, lastName, email, phone, password, totalScore } = req.body
+    let { firstName, lastName, email, phone, password } = req.body
     let data = await Ucer.findOne({ email })
     if (!data) {
-        if (firstName && lastName && email && phone && parent && password && totalScore) {
+        if (firstName && lastName && email && phone && parent && password) {
             try {
                 let hash = await bcrypt.hash(password, 10)
                 let student = new Ucer({
@@ -33,21 +59,12 @@ exports.create = async (req, res) => {
                         father: req.body.ParentsPhoneNumber.father
                     },
                     password: hash,
-                    totalScore,
-                    attendance: [
-                        {
-                            status: req.body.attendance.status,
-                            time: Date(req.body.attendance.time),
-                            reason: Boolean(req.body.attendance.reason),
-                            score: req.body.attendance.score
-                        }
-                    ],
                     status: 'student'
                 })
                 student.save()
                     .then(data => {
                         if (data) {
-                            res.json({ title: "Students created", data: data })
+                            res.json({ title: "Student created", data: data })
                         }
                     })
             } catch (e) {
@@ -62,12 +79,22 @@ exports.create = async (req, res) => {
     }
 }
 exports.edit = async (req, res) => {
-    let { firstName, lastName, email, phone, password, totalScore } = req.body
-    if (firstName || lastName || email || phone || password || totalScore) {
-        let hash = await bcrypt.hash(password, 10)
-        let data = await Ucer.findByIdAndUpdate(req.params.id, { password: hash }, req.body)
-        if (data) {
-            res.json({ title: "Student edited", data })
+    let mother = req.body.ParentsPhoneNumber.mother
+    let father = req.body.ParentsPhoneNumber.father
+    let { firstName, lastName, email, phone, password } = req.body
+    console.log(mother, father);
+    if (firstName || lastName || email || phone || password || mother || father) {
+        if (password) {
+            let hash = await bcrypt.hash(password, 10)
+            let data = await Ucer.findByIdAndUpdate(req.params.id, { ...req.body, password: hash })
+            if (data) {
+                res.json({ title: "Student edited", data })
+            }
+        } else {
+            let data = await Ucer.findByIdAndUpdate(req.params.id, { ...req.body })
+            if (data) {
+                res.json({ title: "Student edited", data })
+            }
         }
     }
     else {
@@ -80,51 +107,5 @@ exports.remove = async (req, res) => {
         res.json({ title: "Student deleted" })
     } else {
         res.json({ title: `${req.params.id} not found` });
-    }
-}
-exports.addStudentToGroup = async (req, res) => {
-    let { idTeacher, idGroup, idStudent } = req.body
-    if (idTeacher && idGroup && idStudent) {
-        let teacher = await Ucer.findById(idTeacher)
-        if (!teacher) {
-            res.json({ title: "Teacher not found..." })
-        } else {
-            let group = await Ucer.findOneAndUpdate(
-                {
-                    _id: idTeacher,
-                    "group._id": idGroup
-                },
-                {
-                    $set: {
-                        "group.$.students": idStudent
-                    }
-                })
-            res.json({ title: "Success", group })
-        }
-    } else {
-        res.json({ title: "Data is not defined..." })
-    }
-}
-exports.removeStudentFromGroup = async (req, res) => {
-    let { idTeacher, idGroup, idStudent } = req.body
-    if (idTeacher && idGroup && idStudent) {
-        let teacher = await Ucer.findById(idTeacher)
-        if (!teacher) {
-            res.json({ title: "Teacher not found..." })
-        } else {
-            let group = await Ucer.findOneAndUpdate(
-                {
-                    _id: idTeacher,
-                    "group._id": idGroup
-                },
-                {
-                    $pull: {
-                        "group.$.students": idStudent
-                    }
-                })
-            res.json({ title: "Deleted", group })
-        }
-    } else {
-        res.json({ title: "Data is not defined..." })
     }
 }

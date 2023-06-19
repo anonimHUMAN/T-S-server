@@ -16,6 +16,7 @@ exports.show = async (req, res) => {
 }
 exports.create = async (req, res) => {
     let { firstName, lastName, email, subject, phone, password } = req.body
+    console.log(req.body);
     let data = await Ucer.findOne({ email })
     if (!data) {
         if (firstName && lastName && email && subject && phone && password) {
@@ -50,17 +51,23 @@ exports.create = async (req, res) => {
 exports.edit = async (req, res) => {
     let { firstName, lastName, email, subject, phone, password } = req.body
     if (firstName || lastName || email || subject || phone || password) {
-        let hash = await bcrypt.hash(password, 10)
-        let data = await Ucer.findByIdAndUpdate(req.params.id, { password: hash }, req.body)
-        if (data) {
-            res.json({ title: "Teacher edited", data })
+        if (password) {
+            let hash = await bcrypt.hash(password, 10)
+            let data = await Ucer.findByIdAndUpdate(req.params.id, { ...req.body, password: hash })
+            if (data) {
+                res.json({ title: "Teacher edited", data })
+            }
+        } else {
+            let data = await Ucer.findByIdAndUpdate(req.params.id, { ...req.body })
+            if (data) {
+                res.json({ title: "Teacher edited", data })
+            }
         }
     }
     else {
         res.json({ title: "Data is notfound for teacher!!!" })
     }
 }
-
 exports.remove = async (req, res) => {
     let data = await Ucer.findByIdAndDelete(req.params.id)
     if (data) {

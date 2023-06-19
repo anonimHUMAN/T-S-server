@@ -4,7 +4,9 @@ const {
     profile,
     profilePut,
     oneGr,
-    oneGrPut
+    oneGrPut,
+    show3attend,
+    addAttend
 } = require('../../controllers/route/routeTeachers')
 
 const router = Router()
@@ -19,5 +21,10 @@ router.put('/profile/:id', profilePut)
 router.get('/group', oneGr)
 // http://localhost:3000/routeTeacher/group?idTeacher=id teacher&idGroup=id group
 router.put('/group', oneGrPut)
+
+// http://localhost:3000/routeTeacher/attend
+router.get('/attend', show3attend)
+// http://localhost:3000/routeTeacher/attend
+router.post('/attend', addAttend)
 
 module.exports = router

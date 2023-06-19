@@ -93,3 +93,35 @@ exports.oneGrPut = async (req, res) => {
     }
 
 }
+
+
+exports.show3attend = async (req, res) => {
+    let data = await Ucer.find({ status: 'student' }).sort({ score: -1 }).limit(1)
+    if (!data) {
+        res.json({ title: "ERROR: " })
+    } else {
+        res.json({ title: "Success", data })
+    }
+}
+
+exports.addAttend = async (req, res) => {
+    req.body.data.map(async item => {
+        if (1) {
+            try {
+                let student = await Ucer.findByIdAndUpdate(item._id, {
+                    $push: {
+                        attendance: {
+                            status: item.status,
+                            time: Date(item.time),
+                            reason: Boolean(item.reason),
+                            score: item.score
+                        }
+                    }
+                })
+                res.json({ title: "Success" })
+            } catch (error) {
+                res.json({ title: "ERROR: ", message: error })
+            }
+        }
+    })
+}

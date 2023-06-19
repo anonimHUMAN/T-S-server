@@ -3,9 +3,11 @@ const {
     index,
     show,
     create,
+    
     edit,
     remove
 } = require('../../controllers/path/teachers')
+const { token } = require('../../middleware/token')
 
 const router = Router()
 
