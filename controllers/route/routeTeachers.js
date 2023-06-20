@@ -105,23 +105,31 @@ exports.show3attend = async (req, res) => {
 }
 
 exports.addAttend = async (req, res) => {
-    req.body.data.map(async item => {
-        if (1) {
-            try {
+    if (req.body.data) {
+        let next1 = false
+        for (let i = 0; i < req.body.data.length; i++) {
+            let student = await Ucer.findById(req.body.data[i]._id, {})
+            // console.log(student.attendance[0].time===true);
+            if(student.attendance[0]){
+                next1 = student.attendance[0].time === req.body.data[0].time
+            }
+        }
+        if (!next1) {
+            req.body.data.map(async item => {
                 let student = await Ucer.findByIdAndUpdate(item._id, {
                     $push: {
                         attendance: {
                             status: item.status,
-                            time: Date(item.time),
+                            time: item.time,
                             reason: Boolean(item.reason),
                             score: item.score
                         }
                     }
                 })
-                res.json({ title: "Success" })
-            } catch (error) {
-                res.json({ title: "ERROR: ", message: error })
-            }
+            })
+            res.json({ message: "Success" })
+        } else {
+            res.json({ title: "Error", message: "You are already add attendance to students" })
         }
-    })
+    }
 }
