@@ -6,7 +6,8 @@ const {
     oneGr,
     oneGrPut,
     show3attend,
-    addAttend
+    addAttend,
+    show1attend
 } = require('../../controllers/route/routeTeachers')
 
 const router = Router()
@@ -24,6 +25,8 @@ router.put('/group', oneGrPut)
 
 // http://localhost:3000/routeTeacher/attend
 router.get('/attend', show3attend)
+// http://localhost:3000/routeTeacher/attend1
+router.get('/attend1', show1attend)
 // http://localhost:3000/routeTeacher/attend
 router.post('/attend', addAttend)
 

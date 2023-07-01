@@ -94,9 +94,17 @@ exports.oneGrPut = async (req, res) => {
 
 }
 
-
 exports.show3attend = async (req, res) => {
     let data = await Ucer.find({ status: 'student' }).sort({ score: -1 }).limit(1)
+    if (!data) {
+        res.json({ title: "ERROR: " })
+    } else {
+        res.json({ title: "Success", data })
+    }
+}
+
+exports.show1attend = async (req, res) => {
+    let data = await Ucer.findById(req.query.idStudent)
     if (!data) {
         res.json({ title: "ERROR: " })
     } else {
@@ -109,9 +117,8 @@ exports.addAttend = async (req, res) => {
         let next1 = false
         for (let i = 0; i < req.body.data.length; i++) {
             let student = await Ucer.findById(req.body.data[i]._id, {})
-            // console.log(student.attendance[0].time===true);
             if(student.attendance[0]){
-                next1 = student.attendance[0].time === req.body.data[0].time
+                next1 = student.attendance[student.attendance.length-1].time === req.body.data[0].time
             }
         }
         if (!next1) {
