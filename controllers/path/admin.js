@@ -53,7 +53,7 @@ exports.addStudentToGroup = async (req, res) => {
     }
 }
 exports.removeStudentFromGroup = async (req, res) => {
-    let { idTeacher, idGroup, idStudent } = req.body
+    let { idTeacher, idGroup, idStudent } = req.query
     if (idTeacher && idGroup && idStudent) {
         let teacher = await Ucer.findById(idTeacher)
         if (!teacher) {
