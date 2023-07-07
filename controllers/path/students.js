@@ -42,7 +42,6 @@ exports.show = async (req, res) => {
 }
 exports.create = async (req, res) => {
     let parent = req.body.ParentsPhoneNumber
-    let attendance = req.body.attendance
     let { firstName, lastName, email, phone, password } = req.body
     let data = await Ucer.findOne({ email })
     if (!data) {

@@ -16,7 +16,6 @@ exports.show = async (req, res) => {
 }
 exports.create = async (req, res) => {
     let { firstName, lastName, email, subject, phone, password } = req.body
-    console.log(req.body);
     let data = await Ucer.findOne({ email })
     if (!data) {
         if (firstName && lastName && email && subject && phone && password) {
@@ -132,5 +131,42 @@ exports.removeStudentFromGroup = async (req, res) => {
         }
     } else {
         res.json({ title: "Data is not defined..." })
+    }
+}
+exports.crStudent = async (req, res) => {
+    let parent = req.body.ParentsPhoneNumber
+    let { firstName, lastName, email, phone, password } = req.body
+    let data = await Ucer.findOne({ email })
+    if (!data) {
+        if (firstName && lastName && email && phone && parent && password) {
+            try {
+                let hash = await bcrypt.hash(password, 10)
+                let student = new Ucer({
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    ParentsPhoneNumber: {
+                        mother: req.body.ParentsPhoneNumber.mother,
+                        father: req.body.ParentsPhoneNumber.father
+                    },
+                    password: hash,
+                    status: 'student'
+                })
+                student.save()
+                    .then(data => {
+                        if (data) {
+                            res.json({ title: "Student created", data: data })
+                        }
+                    })
+            } catch (e) {
+                res.json({ title: "Error", e })
+            }
+        }
+        else {
+            res.json({ title: "Enter all data for student!!!" })
+        }
+    } else if (data) {
+        res.json({ title: "This student already exit" })
     }
 }

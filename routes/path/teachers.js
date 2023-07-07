@@ -3,15 +3,13 @@ const {
     index,
     show,
     create,
-
     edit,
     remove,
-    students
-} = require('../../controllers/path/teachers')
-const {
+    students,
+    crStudent,
     addStudentToGroup,
     removeStudentFromGroup
-} = require('../../controllers/path/admin')
+} = require('../../controllers/path/teachers')
 const { token } = require('../../middleware/token')
 
 const router = Router()
@@ -23,6 +21,9 @@ router.delete('/manage', removeStudentFromGroup)
 
 // http://localhost:3000/teachers/students
 router.get('/students', students)
+
+// http://localhost:3000/teachers/crstudent
+router.post('/crstudent', crStudent)
 
 // http://localhost:3000/teachers
 router.get('/', index)
