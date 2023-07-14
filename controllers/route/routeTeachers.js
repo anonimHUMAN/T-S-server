@@ -117,8 +117,8 @@ exports.addAttend = async (req, res) => {
         let next1 = false
         for (let i = 0; i < req.body.data.length; i++) {
             let student = await Ucer.findById(req.body.data[i]._id, {})
-            if(student.attendance[0]){
-                next1 = student.attendance[student.attendance.length-1].time === req.body.data[0].time
+            if (student.attendance[0]) {
+                next1 = student.attendance[student.attendance.length - 1].time === req.body.data[0].time
             }
         }
         if (!next1) {
@@ -138,5 +138,26 @@ exports.addAttend = async (req, res) => {
         } else {
             res.json({ title: "Error", message: "You are already add attendance to students" })
         }
+    }
+}
+
+exports.totalScore = async (req, res) => {
+    let { idTeacher, idGroup } = req.query
+    try {
+        if (idTeacher && idGroup) {
+            const data = await Ucer.findById(idTeacher).select({ group: { $elemMatch: { _id: idGroup } } })
+            data.group[0].students.map(async (item, i) => {
+                let t = await Ucer.findById(item)
+                let totalS1 = t.attendance[0].score + t.attendance[0].score
+                let newT = totalS1 / t.attendance.length
+                newT = Math.floor(newT)
+                let data1 = await Ucer.findByIdAndUpdate(item, { totalScore: newT })
+            })
+            res.json({ title: "Success" })
+        } else {
+            res.json({ title: "idTeacher or idGroup not found" })
+        }
+    } catch (e) {
+        res.json({ title: "ERROR: ", e })
     }
 }

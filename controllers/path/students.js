@@ -51,6 +51,7 @@ exports.create = async (req, res) => {
                 let student = new Ucer({
                     firstName,
                     lastName,
+                    totalScore: 0,
                     email,
                     phone,
                     ParentsPhoneNumber: {
@@ -74,7 +75,7 @@ exports.create = async (req, res) => {
             res.json({ title: "Enter all data for student!!!" })
         }
     } else if (data) {
-        res.json({ title: "This teacher already exit" })
+        res.json({ title: "This student already exit" })
     }
 }
 exports.edit = async (req, res) => {

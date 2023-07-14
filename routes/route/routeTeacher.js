@@ -7,7 +7,8 @@ const {
     oneGrPut,
     show3attend,
     addAttend,
-    show1attend
+    show1attend,
+    totalScore
 } = require('../../controllers/route/routeTeachers')
 
 const router = Router()
@@ -22,6 +23,9 @@ router.put('/profile/:id', profilePut)
 router.get('/group', oneGr)
 // http://localhost:3000/routeTeacher/group?idTeacher=id teacher&idGroup=id group
 router.put('/group', oneGrPut)
+
+// http://localhost:3000/routeTeacher/attend
+router.get('/total', totalScore)
 
 // http://localhost:3000/routeTeacher/attend
 router.get('/attend', show3attend)

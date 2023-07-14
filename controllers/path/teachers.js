@@ -146,6 +146,7 @@ exports.crStudent = async (req, res) => {
                     lastName,
                     email,
                     phone,
+                    totalScore: 0,
                     ParentsPhoneNumber: {
                         mother: req.body.ParentsPhoneNumber.mother,
                         father: req.body.ParentsPhoneNumber.father
