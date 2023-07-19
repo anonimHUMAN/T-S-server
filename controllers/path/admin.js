@@ -1,10 +1,30 @@
 const Ucer = require('../../model/Role')
+var bcrypt = require('bcrypt');
 
 exports.admin = async (req, res) => {
     let teacher = await Ucer.find({ status: "teacher" })
     let student = await Ucer.find({ status: "student" })
     if (teacher && student) {
         res.json({ title: "All data", teacher, student })
+    }
+}
+exports.editPass = async (req, res) => {
+    const email = req.body.email
+    const oldPassword = req.body.oldPassword
+    const newPassword = req.body.newPassword
+    let newUcer = await Ucer.findOne({ email })
+    if (!newUcer) {
+        res.json({ title: "Error", message: "User not found!" })
+    } else if (newUcer) {
+        bcrypt.compare(oldPassword, newUcer.password, async (err, res1) => {
+            if (res1) {
+                let hash = await bcrypt.hash(newPassword, 10)
+                let data = await Ucer.findByIdAndUpdate(newUcer._id, { password: hash })
+                res.json({ title: "Success", message: 'Password succesfully edited...' });
+            } else {
+                res.json({ title: "Error", message: "Old password incorrect!" })
+            }
+        });
     }
 }
 exports.adminteacher = async (req, res) => {

@@ -4,7 +4,8 @@ const {
     adminstudent,
     admin,
     addStudentToGroup,
-    removeStudentFromGroup
+    removeStudentFromGroup,
+    editPass
 } = require('../../controllers/path/admin')
 
 const router = Router()
@@ -16,6 +17,7 @@ router.delete('/manage', removeStudentFromGroup)
 
 // http://localhost:3000/admin
 router.get('/', admin)
+router.post('/password', editPass)
 router.get('/teachers', adminteacher)
 router.get('/students', adminstudent)
 

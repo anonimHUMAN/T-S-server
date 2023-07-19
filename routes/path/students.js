@@ -6,7 +6,8 @@ const {
     edit,
     remove,
     profileSt,
-    oneScore
+    oneScore,
+    editPass
 } = require('../../controllers/path/students')
 
 const router = Router()
@@ -15,6 +16,8 @@ const router = Router()
 router.get('/profilest', profileSt)
 // http://localhost:3000/students/onescore
 router.get('/onescore', oneScore)
+
+router.post('/password', editPass)
 
 // http://localhost:3000/students
 router.get('/', index)

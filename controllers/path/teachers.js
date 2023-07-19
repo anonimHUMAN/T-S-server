@@ -1,4 +1,3 @@
-const { title } = require("process")
 const bcrypt = require('bcrypt')
 const Ucer = require('../../model/Role')
 
@@ -169,5 +168,24 @@ exports.crStudent = async (req, res) => {
         }
     } else if (data) {
         res.json({ title: "This student already exit" })
+    }
+}
+exports.editPass = async (req, res) => {
+    const email = req.body.email
+    const oldPassword = req.body.oldPassword
+    const newPassword = req.body.newPassword
+    let newUcer = await Ucer.findOne({ email })
+    if (!newUcer) {
+        res.json({ title: "Error", message: "User not found!" })
+    } else if (newUcer) {
+        bcrypt.compare(oldPassword, newUcer.password, async (err, res1) => {
+            if (res1) {
+                let hash = await bcrypt.hash(newPassword, 10)
+                let data = await Ucer.findByIdAndUpdate(newUcer._id, { password: hash })
+                res.json({ title: "Success", message: 'Password succesfully edited...' });
+            } else {
+                res.json({ title: "Error", message: "Old password incorrect!" })
+            }
+        });
     }
 }
